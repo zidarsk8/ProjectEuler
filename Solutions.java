@@ -413,11 +413,70 @@ public class Solutions {
 /******************************************************************************/  
 /******************************************************************************/  
     
+  public void euler303(int sum){
+    long b3 = 1;
+    long[] arr = new long[sum];
+    
+    long counter = 0;
+    while (b3%9999 != 0){
+      counter++;
+      
+      b3=getNewInt10b3(b3);
+
+      if (counter%10000000 == 0){
+        System.out.println("count: "+counter+"   b3: "+b3);
+      }
+      
+    }
+    
+    System.out.println("count   b3: "+b3);
+    
+    for (int i=1; i<sum; i++){
+      if (arr[i]==0){
+        b3=1;
+        while (b3%i != 0){
+          b3=getNewInt10b3(b3);
+        }
+        arr[i]=b3;
+        if ( (b3 % (i*2)== 0 && (i*2)<sum ) ){
+          arr[i*2] = b3;
+        }
+      }
+      //System.out.println("int : "+i+"   multiple :"+arr[i]);
+    }
+    long sumdiv=1;
+    for(int i=1; i<arr.length; i++){
+      sumdiv += arr[i]/i;
+      //System.out.println("int : "+i+"   multiple :"+arr[i]+"    sumdiv : "+sumdiv);
+    }
+    System.out.println(sumdiv);
+    
+  }
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+    
   
   
   
-  
-  
+  /**
+   * 
+   * function used to get base 3 numbers represented in base 10.
+   * 
+   * @param old base 3 number
+   * @return next base 3 number
+   */
+  private long getNewInt10b3(long old){
+    old++;
+    int pos = (""+old).indexOf("3");
+    while (pos != -1){
+      pos = (""+old).length()-pos-1; //get the actual position of the overflow
+      old += (long)(Math.pow(10, pos)*7);
+      pos = (""+old).indexOf("3");
+    }
+    return old;
+  }
   
   
   
