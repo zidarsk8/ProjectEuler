@@ -31,9 +31,11 @@ public class ProjectEuler {
 //      s.euler20(100);
 //      s.euler45(1533776800);
 //      s.euler48(1000);
+//      s.euler14(1000000);    
+//      s.euler16(1000);
+      
+      ////int[] arr = {3,7,4,2,4,6,8,5,9,3};
+      s.euler18();
+      s.euler67();
     }
-    
-    
-    
-    
 }
