@@ -62,7 +62,7 @@ public class Solutions {
   public void euler4(int digits) {      int pal = 0;
     for (int i=digits; i>0 ; i--){
       for (int j=digits; j>0 ; j--){
-        if (isPal(i*j) && i*j>pal){
+        if (isPal(""+(i*j)) && i*j>pal){
             pal = i*j;
         }
       }
@@ -72,7 +72,7 @@ public class Solutions {
 
   public void euler5(int div) {
     int small20 = 0;
-    boolean devizable = true;//false;
+    boolean devizable = false;//false;
     while (!devizable){
       small20++;
       devizable = true;
@@ -634,35 +634,143 @@ public class Solutions {
 /******************************************************************************/  
 /******************************************************************************/  
 
+  public void euler31(int search){
+    int diff=0;
+    int[] arr = {200,100,50,20,10,5,2,1};
+    //int[] arr = {1,2,5,10,20,50,100,200};
+    for (int i = 0; i <=search/arr[0] ; i++) 
+      for (int j = 0; j <=search/arr[1] ; j++)       
+        for (int k = 0; k <=search/arr[2] ; k++)       
+          for (int l = 0; l <=search/arr[3] ; l++)       
+            for (int m = 0; m <=search/arr[4] ; m++)       
+              for (int n = 0; n <=search/arr[5] ; n++)       
+                for (int o = 0; o <=search/arr[6] ; o++)       
+                  for (int p = 0; p <=search/arr[7] ; p++) 
+                    if ( arr[0]*i + arr[1]*j + arr[2]*k + arr[3]*l + arr[4]*m + arr[5]*n + arr[6]*o + arr[7]*p == search)
+                      diff++;
+    System.out.println("diff: "+diff);
+  }
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+
   public void euler32(){
-    int sum=0;
-    TreeSet set = new TreeSet();
-    for (int i=0; i<10000; i++){
-      for (int j=0; j<10000; j++){
-        int pro = i*j;
-        if (hasAllDigits(""+i+j+pro)){
-          set.add(pro);
+    System.out.println("lol I've lost the algorithm and forgot to commit to git");
+  }
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+
+  public void euler34(){
+    int allsum=0;
+    for (int i=3; i<10000000 ; i++){ // sum(factorial([1:9])) = 409113
+      int ii = i;
+      int facsum = 0;
+      while (ii>0){
+        facsum += factorialInt(ii%10);
+        ii/=10;
+      }
+      if (facsum == i){
+        allsum+=i;
+        System.out.println("factsum: "+i);
+      }
+    }
+    System.out.println("factsum: "+allsum);
+  }
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+
+  public void euler35(int max){
+    int count =1;
+    for (int i=3; i<max; i+=2){
+      if (!containsMultipleOf2(""+i) && isPrime(i)){
+        boolean isCirc = true;
+        int pri = i;
+        int numbers = ((int)( Math.log10(i))+1);
+        int num = (int) Math.pow(10,numbers);
+        
+        
+        for (int j=0;j<numbers;j++){
+          pri = (pri*10)%num + pri*10/num;
+          if (!isPrime1(pri)){
+            isCirc= false;
+          }
+        }
+        if (isCirc){
+          count++;
+          //System.out.println("count: "+i+"   "+num);
         }
       }
     }
-    while (!set.isEmpty()){
-      sum += (int) set.pollFirst();
-    }
-    System.out.println(sum);
+    System.out.println("count: "+count);
   }
   
-  private boolean hasAllDigits(String s){
-    if (s.length()!=9){
-      return false;
-    }
-    for(int i=1; i<10 ; i++){
-      if (s.indexOf(""+i)==-1){
-        return false;
+  private boolean containsMultipleOf2(String s){
+    return (s.contains("2")||s.contains("4")||s.contains("6")||s.contains("8")||s.contains("0"));
+  }
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+
+  public void euler36(int max){
+    int sum =0;
+    for (int i=1; i<max; i++){
+      if (isPal(""+i) && isPal(Integer.toBinaryString(i))){
+        sum+=i;
+        System.out.println("i: "+i+"   bin:"+Integer.toBinaryString(i));
       }
     }
-    return true;
+    System.out.println("sum: "+sum);
   }
   
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+
+  public void euler37(){
+    int sum=0;
+    int count=0;
+    int prime=9;
+    while (count<11){
+      if (isPrime1(++prime)){
+        if (isTruncatablePrime(prime)){
+          System.out.println("prime: "+prime);
+          count++;
+          sum+=prime;
+        }
+      }
+    }
+    System.out.println("sum: "+sum);
+  }
+  
+  private boolean isTruncatablePrime(int prime){
+    int prime1= prime;
+    int digit=10;
+    while ((prime1 /= 10)!=0){
+      //System.out.println(prime1);
+      if (!isPrime1(prime1)){
+        return false;
+      }
+      digit *= 10;
+    }
+    
+    digit /= 10;
+    while ((prime = prime%digit)!=0){
+      //System.out.println(prime);
+      if (!isPrime1(prime)){
+        return false;
+      }
+      digit /= 10;
+    }
+    
+    return true;
+  }
   
 /******************************************************************************/  
 /******************************************************************************/  
@@ -742,6 +850,53 @@ public class Solutions {
     return true;
   }
 
+
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+
+  
+  public void euler50(int to){
+    int primecount = 0;
+    int maxCon = 0;
+    int maxConPrime = 0;
+    boolean[] isPrime = new boolean[to];
+    for (int i =2; i<to; i++){
+      if(isPrime1(i)){
+        primecount++;
+        isPrime[i]=true;
+      }
+    }
+    int[] primes = new int[primecount];
+    primecount=0;
+    for (int i =2; i<to; i++){
+      if(isPrime1(i)){
+        primes[primecount++] = i;
+      }
+    }
+    
+    for (int i = 0; i < primes.length; i++) {
+      int con = 0;
+      int sum = 0;
+      for (int j = i; j < primes.length; j++) {
+        sum += primes[j];
+        if (sum>=isPrime.length || sum<0){
+          break;
+        }
+        if (isPrime[sum]){
+          if (maxCon<(j-i)){
+            maxCon = j-i;
+            maxConPrime = sum;
+          }
+          //System.out.println("i: "+i+"   "+isPrime[i]+"   "+primes[i]);
+        }
+      }
+    }
+    System.out.println("i: "+maxCon+"  "+maxConPrime);
+    
+  }
+  
+
 /******************************************************************************/  
 /******************************************************************************/  
 /******************************************************************************/  
@@ -805,30 +960,6 @@ public class Solutions {
 /******************************************************************************/  
 /******************************************************************************/  
   
-  public void euler303v1(int sum){
-    long b3 = 1;
-    long[] arr = new long[sum];
-    for (int i=1; i<sum; i++){
-      if (arr[i]==0){
-        b3=1;
-        while (b3%i != 0){
-          b3=getNewInt10b3(b3);
-        }
-        arr[i]=b3;
-        if ( (b3 % (i*2)== 0 && (i*2)<sum ) ){
-          arr[i*2] = b3;
-        }
-      }
-      //System.out.println("int : "+i+"   multiple :"+arr[i]);
-    }
-    long sumdiv=1;
-    for(int i=1; i<arr.length; i++){
-      sumdiv += arr[i]/i;
-      //System.out.println("int : "+i+"   multiple :"+arr[i]+"    sumdiv : "+sumdiv);
-    }
-    System.out.println(sumdiv);
-  }
-
   public void euler303v3(int sum){
     BigInteger b3 = new BigInteger("1");
     BigInteger[] arr = new BigInteger[++sum];
@@ -839,9 +970,8 @@ public class Solutions {
       b3=new BigInteger("1");
       BigInteger current = new BigInteger(""+i);
       if (current.toString().replace("9", "").equals("")){ //if all are nines
-        b3 = new BigInteger("99999999999999999999999999999999");
+        b3 = new BigInteger("99999999999999999999999999999999999999999999999");
         String solution = new String();
-        String finalSolution = new String();
         for (int ii=0; ii<100; ii++){
           solution = "";
           for (int jj=0; jj<ii; jj++){
@@ -851,14 +981,9 @@ public class Solutions {
             solution+="2";
             if((new BigInteger(solution)).mod(current).equals(new BigInteger("0")) && (new BigInteger(solution)).compareTo(b3)==-1){
               b3 = (new BigInteger(solution));
-              finalSolution = solution;
             }
           }
         }
-//        for (int ii=i; ii<=sum; ii*=10){
-//          arr[ii] = new BigInteger(finalSolution);
-//          finalSolution+="0";
-//        }
       }else{
         while (!b3.mod(current).equals(new BigInteger("0"))){
           b3=getNewInt10b3Big(b3);
@@ -870,39 +995,104 @@ public class Solutions {
     BigInteger sumdiv = new BigInteger("0");
     for(int i=1; i<arr.length; i++){
       sumdiv = sumdiv.add(arr[i].divide(new BigInteger(""+i)));
-//      sumdiv += arr[i]/i;
-      //System.out.println("int : "+i+"   multiple :"+arr[i].toString()+"    sumdiv : "+sumdiv.toString());
     }
     System.out.println(sumdiv.toString());
   }
-
-  public void euler303v2(int sum){
-    BigInteger[] arr = new BigInteger[sum];
-    for (int i = 0; i < arr.length; i++) {
-      arr[i] = getMul10b3(new BigInteger(""+13));
-    }
-  }
   
-  private BigInteger getMul10b3(BigInteger mul){
-    BigInteger multiplier = new BigInteger("1");
-    String num = multiplier.multiply(mul).toString();
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+
+  public void euler327(int c, int r){
+    int[] rooms = new int[r+1];
+
+    int currentRoom = 0;
+    int currentCards = 0;
+    boolean forward = true;
+    int sum = 0;
+    boolean leavemin = false;
+    int lastRoom = rooms.length-c;
     
-    int i = 0;
-    while (i<num.length()){
-      while((num.charAt(num.length()-1-i) & 0xf) > 2){
-        multiplier = multiplier.add( (new BigInteger( ""+((int)Math.pow(10, i)) ) ) );
-        num = multiplier.multiply(mul).toString();
+    while (currentRoom > 0 || fullRooms(rooms)<rooms.length-c){
+      if (forward){
+        if (currentRoom == 0){
+          sum -= currentCards;
+          currentCards = c-1;
+          currentRoom++;
+          sum += c;
+          printArray(rooms,4);
+        }
+        if (currentCards+rooms[currentRoom]<=c || currentRoom==lastRoom){
+          if (currentRoom==lastRoom){
+            lastRoom--;
+            leavemin = true;
+          }
+          forward = false;
+        }else{
+          while (currentCards<c && rooms[currentRoom]>0){
+            currentCards++;
+            rooms[currentRoom]--;
+          }
+          currentCards--;
+          currentRoom++;
+        }
+      }else{
+        rooms[currentRoom] += currentCards-1;
+        currentCards = 0; 
+        if (leavemin){
+          while (currentCards<c && rooms[currentRoom]>1){
+            currentCards++;
+            rooms[currentRoom]--;
+          }
+          leavemin = false;
+        }
+        currentRoom--;
+        forward = (currentRoom == 0);
       }
     }
-    System.out.println("num: "+mul.toString()+"  : "+num);
-    
-    return multiplier;
+    System.out.println("sum  "+sum);
+  }
+  private int fullRooms(int[] rooms){
+    int sum = 0;
+    for (int i = 0; i < rooms.length; i++) {
+      sum += rooms[i]>0 ? 1:0;
+    }
+    return sum;
   }
   
 /******************************************************************************/  
 /******************************************************************************/  
 /******************************************************************************/  
-    
+
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+
+  
+  private void printArray(int[] arr,int max){
+    for (int i = 0; i < arr.length; i++) {
+      System.out.printf("%"+max+"d  ",arr[i]);
+    }
+    System.out.println();
+  }
+  
+  
   private String[] removeElement(String[] arr, int curLetter){
     String[] temp = new String[arr.length-1];
     for (int i = 0; i < arr.length; i++) {
@@ -1034,8 +1224,8 @@ public class Solutions {
 	}
 
   
-  private boolean isPal(int pal){
-    String niz = ""+pal;
+  private boolean isPal(String niz){
+    //String niz = ""+pal;
     for(int i=0; i< niz.length()/2; i++){
       if(niz.charAt(i) != niz.charAt(niz.length()-1-i))
         return false;
