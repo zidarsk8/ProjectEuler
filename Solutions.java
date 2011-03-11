@@ -656,9 +656,50 @@ public class Solutions {
 /******************************************************************************/  
 
   public void euler32(){
-    System.out.println("lol I've lost the algorithm and forgot to commit to git");
+    int sum=0;
+    TreeSet set = new TreeSet();
+    for (int i=0; i<10000; i++){
+      for (int j=0; j<10000; j++){
+        int pro = i*j;
+        if (hasAllDigits(""+i+j+pro)){
+          set.add(pro);
+        }
+      }
+    }
+    while (!set.isEmpty()){
+      sum += (int) set.pollFirst();
+    }
+    System.out.println(sum);
   }
   
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+
+  public void euler33(){
+    int denum = 1;
+    int num = 1;
+    for (int i=10 ; i<100 ; i++){
+      for (int j=i+1 ; j<100 ; j++){
+        for (int k=1; k<10;k++){
+          int ii = Integer.parseInt(("0"+i).replace(""+k, ""));
+          int jj = Integer.parseInt(("0"+j).replace(""+k, ""));
+          if (ii!=0 && jj!=0 && i!=ii && j!=jj && ((double)i/j)== ((double)ii/jj)){
+            System.out.println(i+"/"+j+"    "+ii+"/"+jj);
+            System.out.println(((double)i/j));
+            System.out.println(((double)ii/jj));
+            System.out.println();
+            num*=i;
+            denum*=j;
+          }
+        }
+      }    
+    }
+
+    System.out.println(num+" / "+denum);
+  }
+
 /******************************************************************************/  
 /******************************************************************************/  
 /******************************************************************************/  
@@ -770,6 +811,75 @@ public class Solutions {
     }
     
     return true;
+  }
+  
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+
+  public void euler38(){
+    for (int i=0; i<10000; i++){
+      String s="";
+      for (int j=1; j<11 && s.length()<9; j++){
+        s+=i*j;
+      }
+      if (hasAllDigits(s)){
+        System.out.println(s);
+      }
+    }
+  }
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+
+  public void euler39(int perimeter){
+    int maxSolutions = 0;
+    int bestPar = 0;
+    for (int i=3; i<=perimeter; i++){
+      int solutions = 0;
+      for(int a = 1; a<i; a++){
+        for (int b = a; b+a<i ; b++){
+          int c= i-a-b;
+          if (c*c == a*a+b*b){
+            solutions++;
+          }
+        }
+      }
+      if (solutions>maxSolutions){
+        bestPar = i;
+        maxSolutions = solutions;
+        System.out.println("par: "+bestPar+"    sol: "+solutions);
+      }
+    }
+  }
+  
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+
+  public void euler40(int last){
+    String s = "";
+    int product = 1;
+    for (int n =1; n<=last ; n*=10){
+      int digitPos = 1;
+      int curPos = 0;
+      int digit = 1;
+      while (digitPos<=n){
+        s= ""+digit;
+        curPos=digitPos;
+        while(digitPos < s.length()+curPos) {
+          if (digitPos==n){
+            product *= s.charAt(digitPos-curPos) & 0xf;
+          }
+          digitPos++;
+        }
+        digit++;
+      }
+    }
+    System.out.println("pro: "+product);
   }
   
 /******************************************************************************/  
@@ -1083,6 +1193,19 @@ public class Solutions {
 /******************************************************************************/  
 /******************************************************************************/  
 /******************************************************************************/  
+
+  
+  private boolean hasAllDigits(String s){
+    if (s.length()!=9){
+      return false;
+    }
+    for(int i=1; i<10 ; i++){
+      if (s.indexOf(""+i)==-1){
+        return false;
+      }
+    }
+    return true;
+  }
 
   
   private void printArray(int[] arr,int max){

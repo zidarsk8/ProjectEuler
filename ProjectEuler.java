@@ -54,6 +54,10 @@ public class ProjectEuler {
 //      s.euler35(1000000);
 //      s.euler36(1000000);
 //      s.euler37();
+//      s.euler38();
+//      s.euler39(1000);
+//      s.euler40(1000000);
+      
 //      s.euler49();
 //      s.euler47(4);
 //      s.euler45(1533776800);
