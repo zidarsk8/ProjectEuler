@@ -5,7 +5,6 @@ import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.Stack;
-import java.util.TreeMap;
 import java.util.TreeSet;
 
 /*
@@ -382,14 +381,11 @@ public class Solutions {
     Arrays.sort(names);
     long sum = 0;
     for (int i = 0; i < names.length; i++) {
-      int numval = 0;
-      for(int j=0; j<names[i].length(); j++){
-        numval += names[i].charAt(j)-64;
-      }
-      sum += numval*(i+1);
+      sum += numvalOfString(names[i])*(i+1);
     }
     System.out.println("sum: "+sum);
   }
+  
   
 /******************************************************************************/  
 /******************************************************************************/  
@@ -513,28 +509,6 @@ public class Solutions {
   }
   
   
-
-/******************************************************************************/  
-/******************************************************************************/  
-/******************************************************************************/  
-
-  public void euler45(int min){
-    long minmax = min+1;
-    long tri = 0;
-    long pen = 1;
-    long hex = 1;
-    while (tri != pen || hex != pen || tri != hex){
-      tri = getTriangle(minmax);
-      pen = getPentagonal(minmax);
-      hex = getHexagonal(minmax);
-      minmax = getmax(tri, pen, hex);
-    }
-    
-    System.out.println(""+trianglei+"  "+getTriangle(minmax));
-    System.out.println(""+pentagonali+"  "+getPentagonal(minmax));
-    System.out.println(""+hexagonali+"  "+getHexagonal(minmax));
-    
-  }
   
 /******************************************************************************/  
 /******************************************************************************/  
@@ -886,6 +860,141 @@ public class Solutions {
 /******************************************************************************/  
 /******************************************************************************/  
 
+  // 987654321 would be the highest possible with numbers from 1 to 9
+  // but all 9 digit numbers like that are devisible by 3
+  public void euler41(){
+    for (long i=87654321;i>5 ;i-=2){
+      int len = ((int)Math.log10(i)+1);
+      if(i<=(len+1)*((int)Math.pow(10, len-1))){
+        if (hasAllDigits(""+i, 1, len)){
+          System.out.println(""+i+"  "+len);
+          if (isPrime1(i) ){
+            break;
+          }
+        }
+      }
+    }
+  }
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+
+  // 987654321 would be the highest possible with numbers from 1 to 9
+  // but all 9 digit numbers like that are devisible by 3
+  public void euler42(String[] arr){
+    int count = 0;
+    for (int i = 0; i < arr.length; i++) {
+      int numval = numvalOfString(arr[i]);
+      if (isTriangle(numval) || numval==1){
+        count++;
+        System.out.println(count+"   "+(isTriangle(numval))+"   "+numval+"   "+arr[i]);
+      }
+      
+    }
+    System.out.println("aaa  "+count);
+  }
+  
+  
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+
+  public void euler43(){
+    long[] arr = {0,1,2,3,4,5,6,7,8,9};
+    long[] div = {1,1,1,2,3,5,7,11,13,17};
+    System.out.println(sumEuler43(arr,div, 0));
+  }
+  
+  private long sumEuler43(long[] arr,long[] div, long number){
+    long sum = 0;
+    for (int i = 0; i < arr.length; i++) {
+      long newnumber =number*10+arr[i];
+      if ((newnumber%1000) % div[div.length-arr.length] == 0){
+        long[] newarr = new long[arr.length-1];
+        for (int j=0; j<arr.length ; j++){
+          if (j!=i){
+            newarr[j-(j<i?0:1)] = arr[j];
+          }
+        }
+        sum += sumEuler43(newarr, div, newnumber);
+      }
+    }
+    if (arr.length==0 && (number%1000) % div[div.length-1] == 0){
+      System.out.println(number);
+      return sum+number;
+    }
+    return sum;
+  }
+  
+  
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+
+  public void euler44(String[] arr){
+    
+  }
+  
+  
+
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+
+  public void euler45(int min){
+    long minmax = min+1;
+    long tri = 0;
+    long pen = 1;
+    long hex = 1;
+    while (tri != pen || hex != pen || tri != hex){
+      tri = getTriangle(minmax);
+      pen = getPentagonal(minmax);
+      hex = getHexagonal(minmax);
+      minmax = getmax(tri, pen, hex);
+    }
+    
+    System.out.println(""+trianglei+"  "+getTriangle(minmax));
+    System.out.println(""+pentagonali+"  "+getPentagonal(minmax));
+    System.out.println(""+hexagonali+"  "+getHexagonal(minmax));
+    
+  }
+  
+  
+
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+
+  public void euler46(){
+    for (int i=3; ; i+=2){
+      if (!isPrime1(i)){
+        boolean isok = true;
+        for (int j=3; j<i; j+=2){
+          if (isPrime1(j)){
+            double add = Math.sqrt((i-j)/2);
+            if (Math.floor(add)==add){
+              //System.out.println(i+"   "+j);
+              isok = false;
+              break;
+            }
+          }
+        }
+        if (isok){
+          System.out.println(i);
+          break;
+        }
+      }
+    }
+    
+  }
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+
   public void euler47(int dist){
     int found = 0;
     int i=1;
@@ -1011,21 +1120,62 @@ public class Solutions {
 /******************************************************************************/  
 /******************************************************************************/  
 
+  public void euler52(int digits){
+    String[] arr = new String[digits];
+      int n = 10;
+    do{
+      n++;
+      for(int i=1; i<=digits; i++){
+        arr[i-1] = ""+(n*i);
+      }
+      printArray(arr, 10);
+    }while(!containSameChars(arr));
+    System.out.println(n+"   "+ digits);
+  }
   
-  
-  
-  
-  
-  
+  public boolean containSameChars(String[] arr){
+    for (int i = 1; i < arr.length; i++) {
+      if (arr[i-1].length()!=arr[i].length()){
+        return false;
+      }
+    }
+    while(arr[0].length()>0){
+      String c = ""+arr[0].charAt(0);
+      for (int j = 0; j < arr.length; j++) {
+        arr[j] = arr[j].replace(c, "");
+      }
+    }
+    for (int j = 0; j < arr.length; j++) {
+      if (arr[j].length() != 0){
+        return false;
+      }
+    }
+    
+    return true;
+  }
   
   
 /******************************************************************************/  
 /******************************************************************************/  
 /******************************************************************************/  
 
-  
+  public void euler53(int maxn){
+    BigInteger million = BigInteger.TEN.pow(6);
+    int sum = 0;
+    for (int n=1; n<=maxn ;n++){
+      for (int r=1; r<=n ; r++){
+        if (combinations(n, r).compareTo(million)==1){
+          sum++;
+        }
+      }
+    }
+    
+    System.out.println("sum: "+sum);
+  }
 
-  
+  private BigInteger combinations(int n,int r){
+    return factorialBigInt(n).divide(factorialBigInt(r).multiply(factorialBigInt(n-r)));
+  }
   
 /******************************************************************************/  
 /******************************************************************************/  
@@ -1195,11 +1345,66 @@ public class Solutions {
 /******************************************************************************/  
 
   
-  private boolean hasAllDigits(String s){
-    if (s.length()!=9){
+  public void primetest(long n){
+    long t = System.nanoTime();
+    for (long i = n-10000; i < n ; i++) {
+      //System.out.println(i+"  "+isPrime1(i)+isPrimeLenstra(i));
+      isPower(i);
+    }
+    System.out.println("power: "+(System.nanoTime()-t));
+    t = System.nanoTime();
+    for (long i = n-10000; i < n ; i++) {
+      //System.out.println(i+"  "+isPrime1(i)+isPrimeLenstra(i));
+      isPrime1(i);
+    }
+    System.out.println("prime: "+(System.nanoTime()-t));
+//    for (int i = n-10000; i < n ; i++) {
+//      if (isPrime1(i)){
+//        System.out.println(i+"  ");
+//      }
+//    }
+  }
+  
+  private boolean isPrimeLenstra(int p){
+    if (isPower(p)){
       return false;
     }
-    for(int i=1; i<10 ; i++){
+    return false;
+  }
+  
+  
+  private boolean isPower(long n){
+    long root = 2;
+    double rootValue =0;
+    do{
+      rootValue = Math.pow(n, 1.0/root);
+      if (Math.floor(rootValue)==rootValue){
+        System.out.println(n+"  =  "+rootValue+"^"+root);
+        return true;
+      }
+      root++;
+    }while (rootValue>2);
+    return false;
+  }
+  
+  
+  
+  
+  
+  
+  
+  
+  
+  private boolean hasAllDigits(String s){
+    return hasAllDigits(s, 1, 9);
+  }
+
+  
+  private boolean hasAllDigits(String s,int from, int to){
+    if (s.length()!=to+-from+1){
+      return false;
+    }
+    for(int i=from; i<=to ; i++){
       if (s.indexOf(""+i)==-1){
         return false;
       }
@@ -1208,9 +1413,17 @@ public class Solutions {
   }
 
   
+  
   private void printArray(int[] arr,int max){
     for (int i = 0; i < arr.length; i++) {
       System.out.printf("%"+max+"d  ",arr[i]);
+    }
+    System.out.println();
+  }
+  
+  private void printArray(String[] arr,int max){
+    for (int i = 0; i < arr.length; i++) {
+      System.out.println(""+arr[i]);
     }
     System.out.println();
   }
@@ -1391,6 +1604,10 @@ public class Solutions {
     }
     return n;
   }
+  private boolean isTriangle(long min){
+    trianglei=1;
+    return getTriangle(min-1)==min;
+  }
   private long getPentagonal(long min){
     long n = 0;
     pentagonali--;
@@ -1491,6 +1708,14 @@ public class Solutions {
   }
   private long pow(long a,long b){
     return (long)(Math.pow(a, b));
+  }
+  
+  private int numvalOfString(String s){
+    int numval = 0;
+    for(int j=0; j<s.length(); j++){
+      numval += s.charAt(j)-64;
+    }
+    return numval;
   }
   
 }
