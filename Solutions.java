@@ -3,6 +3,8 @@ import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.LinkedList;
 import java.util.Stack;
 import java.util.TreeSet;
@@ -933,7 +935,7 @@ public class Solutions {
 /******************************************************************************/  
 /******************************************************************************/  
 /******************************************************************************/  
-
+ 
   public void euler44(String[] arr){
     
   }
@@ -1324,6 +1326,219 @@ public class Solutions {
 /******************************************************************************/  
 /******************************************************************************/  
 
+  public void euler328(int len){
+    len++;
+    TreeSet ts = new TreeSet();
+    int[] arr = new int[len];
+    int[] arrprint = new int[len];
+    int[] steps = new int[len];
+    steps[1] = 0;
+    steps[2] = 1;
+    steps[3] = 1;
+    arr[1] = 0;
+    arr[2] = 1;
+    arr[3] = 2;
+    arrprint[1] = 1;
+    arrprint[2] = 1;
+    arrprint[3] = 2;
+    
+    System.out.println("el    1   kor    0   teža    0  : _ ");
+    System.out.println("el    2   kor    1   teža    1  : *_ ");
+    System.out.println("el    3   kor    1   teža    2  : _*_ ");
+//    System.out.println("   2 :    1  : *_ ");
+//    System.out.println("   3 :    2  : _*_ ");
+    for (int i = 4; i < arr.length; i++) {
+      arr[i] = Integer.MAX_VALUE;
+      for (int j=1; j<=i; j++){
+        if (Math.max(j+arr[j-1],j+arr[i-j]+j*steps[i-j])<=arr[i]){
+          arr[i]=Math.max(arr[j-1]+j,j+arr[i-j]+j*steps[i-j]);
+          if (arr[j-1] >= arr[i-j]+j*steps[i-j]){
+            steps[i] = steps[j-1]+1;
+          }else{
+            steps[i] = steps[i-j]+1;
+          }
+        }
+        //System.out.println("");
+        //System.out.println("st el: "+i+"  del mesto: "+j+"  teza: "+(Math.max(j+arr[j-1],j+arr[i-j]+j*steps[i-j])));
+      }
+      System.out.printf("el %4d   kor %4d   teža %4d  : ",i,steps[i],arr[i]);
+      for (int j=1; j<=i; j++){
+        
+        if (Math.max(arr[j-1]+j,j+arr[i-j]+j*steps[i-j])==arr[i]){
+          ts.add(j);
+          arrprint[i] = j;
+          System.out.print("*");
+        }else{
+          System.out.print("_");   
+        }
+      }
+      while (!ts.isEmpty()){
+        System.out.print(" ,"+ts.pollFirst());
+      }
+      System.out.println();
+      
+    }
+    System.out.println();
+    System.out.println();
+    System.out.println();
+    System.out.println();
+    System.out.println();
+    System.out.println();
+    arr328place = new int[arr.length];
+    for (int i = 0; i < arr328place.length; i++) {
+      arr328place[i] = arr328place.length;
+    }
+    
+      System.out.println();
+    printSearchTree(arrprint, 1, arrprint.length-1, 1,0);
+      System.out.println();
+    printSearchTree2(arrprint, 1, arrprint.length-1, 1,0);
+      System.out.println();
+      System.out.println();
+      
+    for (int i = 1; i < arr328place.length/2; i++) {
+      for (int j = 1; j < arr328place.length; j++) {
+        if (arr328place[j] == i){
+          System.out.printf("%2d", j-1);
+        }else if (arr328place[j] < i){
+          System.out.printf(" |");
+        }else{
+          System.out.printf("  ");
+        }
+      }
+      System.out.println();
+      for (int j = 1; j < arr328place.length; j++) {
+        if (arr328place[j] == i){
+          System.out.printf(" |", j);
+        }else if (arr328place[j] < i){
+          System.out.printf(" |");
+        }else{
+          System.out.printf("  ");
+        }
+      }
+      System.out.println();
+    }
+  
+      System.out.println();
+    for (int i = 0; i < arr.length; i++) {
+      System.out.printf(" %3d \n ",arr[i]);
+    }
+  }
+  int[] arr328place;
+  private void printSearchTree(int[] arr, int from, int to,int level, int place){
+    if (from<to && to>0 && to<arr.length && from>0 && from<arr.length){
+      printSearchTree(arr, 1, arr[to]-1, level+1, place);
+      System.out.printf("%3d", level);
+      printSearchTree(arr, 1, to-arr[to], level+1,arr[to] + place );
+    }
+  }
+  private void printSearchTree2(int[] arr, int from, int to,int level, int place){
+    if (from<to && to>0 && to<arr.length && from>0 && from<arr.length){
+      printSearchTree2(arr, 1, arr[to]-1, level+1, place);
+      System.out.printf("%3d", arr[to]+place+1);
+      arr328place[arr[to]+place+1]= level;
+      printSearchTree2(arr, 1, to-arr[to], level+1,arr[to] + place );
+    }
+  }
+  
+  private int search (int[] array, int from, int to){
+    if (from < to-3){
+      int pivot = from + 2*(to-from)/3;
+      return Math.max(search(array, from, pivot-1), search(array, pivot+1, to))+array[pivot];
+    }else{
+      return array[from];
+    }
+  }
+  
+  
+  private int search2(int from, int to, int add){
+    if (to <4) {
+      return add+to-1;
+    }else{
+      int minSum = Integer.MAX_VALUE;
+      for (int i=from; i<=to ; i++){
+        int levo = search2(from, i, add);
+        int desno = search2(i, to, i+add);
+        
+      }
+    }
+    return 0;
+  }    
+  
+  private int sumfromto(int from, int to){
+    int sum =0;
+    for (int i = from; i <= to; i++) {
+      sum+=i;
+    }
+    return sum;
+  }
+  
+//  int[][] arrFromTo; 
+  HashMap<Object, Object> arrFromTo; 
+  int lenght328;
+  public void euler328v2(int len){
+    arrFromTo = new HashMap<Object, Object>();
+    lenght328 = len;
+//    arrFromTo = new int[len+1][len+1];
+//    for (int i = 0; i < arrFromTo.length; i++) {
+//      for (int j = 0; j < arrFromTo[i].length; j++) {
+//        arrFromTo[i][j] = -1;
+//      }
+//    }
+    int sum = 0;
+    for (int i=1; i<= len ; i++){
+      int costt = cost(1, i);
+      sum += costt;
+      //System.out.println(i+"  "+costt);
+    }
+    System.out.println(sum);
+//    sum = 0;
+//    for (int i = 0; i < arrFromTo.length; i++) {
+//      for (int j = 0; j < arrFromTo[i].length; j++) {
+//        if (arrFromTo[i][j] == -1){
+//          sum++;
+//        }
+//      }
+//    }
+//    System.out.println(sum);
+  }
+  
+  private int cost(int from, int to){
+    if (from >= to){
+      return 0;
+    }else if(from == to-1){
+      return from;
+    }else if(from == to-2){
+      return from+1;
+    }else if(arrFromTo.containsKey(from*lenght328+to)){
+      return (int)arrFromTo.get(from*lenght328+to);
+    }else{
+//    }else if(arrFromTo[from][to] != -1){
+//      return arrFromTo[from][to];
+//    }else{
+      int bestCost = Integer.MAX_VALUE;
+      int devider = 0;
+      for (int i = (from+to)/2; i<=to; i++){
+        int curCost = Math.max(cost(from, i-1), cost(i+1, to)) +i ;
+        if (curCost < bestCost){
+          bestCost = curCost;
+          devider = i;
+        }
+      }
+      if (from == 1){
+////        System.out.println("to: "+to+"    dev: "+devider);
+        System.out.println(to+" "+devider);
+      }
+      arrFromTo.put(from*lenght328+to, bestCost);
+//      arrFromTo[from][to]=bestCost;
+      return bestCost;
+    }
+  }
+  
+  private int numOfSteps(int from, int to){
+    return (int) Math.ceil((double)(to-from+1)/3.0);
+  }
+  
   
 /******************************************************************************/  
 /******************************************************************************/  
