@@ -6,8 +6,11 @@ import java.util.GregorianCalendar;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.LinkedList;
+import java.util.Map.Entry;
 import java.util.Stack;
+import java.util.TreeMap;
 import java.util.TreeSet;
+import javax.swing.text.html.parser.Entity;
 
 /*
  * To change this template, choose Tools | Templates
@@ -196,7 +199,7 @@ public class Solutions {
   public void euler12(int numOfDev){
     int num = 1 ;
     int counter = 1;
-    while (numOfDevisors(num)<numOfDev){
+    while (numOfDivisors(num)<numOfDev){
       counter++;
       num+=counter;
     }
@@ -936,8 +939,27 @@ public class Solutions {
 /******************************************************************************/  
 /******************************************************************************/  
  
-  public void euler44(String[] arr){
+  public void euler44(){
+    long[] arr = new long[1000000];
+    arr[0] = 1;
+    for (int i = 1; i < arr.length; i++) {
+      arr[i] = getPentagonal(arr[i-1]+1); 
+      //println(i+"   "+arr[i]);
+    }
+    for (int i = 0; i < arr.length; i++) {
+      for (int j = i; j >=0 ; j--) {
+        if (isPantegonal(arr[i]+arr[j])&&isPantegonal(arr[i]-arr[j])){
+          println(i+"   "+arr[i]+"  "+arr[j]+"   D = "+(arr[i]-arr[j]));
+          return;
+        }
+      }
+    }
+  }
+  
+  private boolean isPantegonal(long n){
     
+    pentagonali = 1;
+    return (n>0 && n == getPentagonal(n));
   }
   
   
@@ -1218,6 +1240,416 @@ public class Solutions {
     
   }
   
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+  
+  public void euler69(int max){
+    //Mathematica
+    int nevi = 0;
+    for (int i=2; i<=max; i++){
+      if (i/EulerPhi(i)>nevi){
+        nevi = i/EulerPhi(i);
+        println(""+i);
+      }
+    }
+  }
+  
+  private int EulerPhi(int i){
+    //solved with mathematica: need to implement this later
+    return i;
+  }
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+  
+  public void euler81(int[][] arr){
+    for (int i = 1; i < arr[0].length; i++) {
+      arr[0][i] += arr[0][i-1];
+    }
+    for (int i = 1; i < arr.length; i++) {
+      arr[i][0] += arr[i-1][0];
+    }
+    for (int i = 1; i < arr.length; i++) {
+      for (int j = 1; j < arr.length; j++) {
+        arr[i][j] += arr[i-1][j]<arr[i][j-1] ? arr[i-1][j] : arr[i][j-1];
+      }
+    }
+    println(""+arr[arr.length-1][arr[arr.length-1].length-1]);
+  }
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+  
+  public void euler92(int below){
+    int sum89 = 0;
+    for (int i = 2; i < below; i++) {
+      int cur = i;
+      while(cur != 89 && cur != 1){
+        cur = sumSquareOfDigits(cur);
+      }
+      if (cur==89){
+        sum89++;
+      }
+    }
+    println(""+sum89);
+  }
+  
+  private int sumSquareOfDigits(int n){
+    int sum =0;
+    while (n>0){
+      sum += (n%10)*(n%10);
+      n /= 10;
+    }
+    return sum;
+  }
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+  
+  public void euler97(){
+    //solved with mathematica
+    // Mod[28433*2^7830457+1,10000000000];
+    println("8739992577");
+  }
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+  
+  public void euler100(){
+    // prime = num * 2^powerOfTwo + 1
+    BigInteger n = new BigInteger("500000000000");
+    BigInteger one = new BigInteger("1");
+    BigInteger tvo = new BigInteger("2");
+    BigInteger square = new BigInteger("1");
+    BigInteger m = new BigInteger("1000000000000");
+    BigInteger msquare = m.pow(2);
+    while (square.compareTo(msquare)<0){
+      n = n.add(one);
+      square = (n.pow(2)).subtract(n).multiply(tvo);
+      println(square.toString());
+    }
+    
+  }
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+  
+  public void euler102(int[][] arr){
+    int inside= 0;
+    for (int i = 0; i < arr.length; i++) {
+      int[] p1 = {arr[i][0],arr[i][1]};
+      int[] p2 = {arr[i][2],arr[i][3]};
+      int[] p3 = {arr[i][4],arr[i][5]};
+      //println("("+p1[0]+","+p1[1]+")   ("+p2[0]+","+p2[1]+")   ("+p3[0]+","+p3[1]+")");
+      int[] p4 = {0,0};
+      if (isInsideTriangle(p1, p2, p3, p4)){
+        inside++;
+      }
+    }
+    println(""+inside);
+  }
+  private boolean isInsideTriangle(int[] a,int[] b,int[] c,int[] point){
+    if (sameSide(a, b, c, point) && sameSide(a, c, b, point) && sameSide(b, c, a, point)){
+      return true;
+    }
+    return false;
+  }
+  /**
+   * functions takes a vector with coordinates v1 and v2, and checks if point is on the same side of the vector as ref
+   * @param v1
+   * @param v2
+   * @param ref
+   * @param point
+   * @return 
+   */
+  private boolean sameSide(int[] v1, int[] v2, int[] ref, int[] point){
+    int[] vec = subVec(v1,v2);
+    int[] vecref = subVec(v1,ref);
+    int[] vecpoint = subVec(v1,point);
+    int cross1 = crossProduct2d(vec, vecref);
+    int cross2 = crossProduct2d(vec, vecpoint);
+    cross1 = cross1/Math.abs(cross1);
+    cross2 = cross2/Math.abs(cross2);
+    return (cross1*cross2>=0);
+  }
+  
+  private int[] subVec(int[] v1, int[] v2){
+    if (v1.length != v2.length){
+      println("vector lenght error");
+      return null;
+    }else{
+      int[] vec = new int[v1.length];
+      for (int i = 0; i < v2.length; i++) {
+        vec[i] = v2[i]-v1[i];
+      }
+      return vec;
+    }
+  }
+  
+  private int crossProduct2d(int[] vec1, int[] vec2){
+    return vec1[0]*vec2[1]-vec1[1]*vec2[0];
+  }
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+  
+  public void euler124(int max, int search){
+    //int[][] arr= new int[max][2];
+    CompareArray[] arr = new CompareArray[max];
+    for (int i = 0; i < arr.length; i++) {
+      arr[i] = new CompareArray();
+      arr[i].setIndex(i+1);
+      arr[i].setFacProduct(arrayProduct(factors(i+1)));
+      //System.out.println(arr[i][0]+"  "+arr[i][1]);
+    }
+    Arrays.sort(arr);
+//    for (int i = 0; i < arr.length; i++) {
+//      System.out.printf("%7d %7d %7d\n",arr[i].getIndex(),arr[i].getFacProduct(),(i+1));
+//    }
+    System.out.printf("%7d %7d %7d\n",arr[search-1].getIndex(),arr[search-1].getFacProduct(),search);
+  }
+  
+  class CompareArray implements Comparable<CompareArray> {
+    private int index;
+    private int facProduct;
+
+    public int getFacProduct() {
+      return facProduct;
+    }
+
+    public int getIndex() {
+      return index;
+    }
+
+    public void setFacProduct(int facProduct) {
+      this.facProduct = facProduct;
+    }
+
+    public void setIndex(int index) {
+      this.index = index;
+    }
+
+    public int compareTo(CompareArray o) {
+      return this.facProduct-o.getFacProduct();
+    }
+    
+  }
+  
+  private int arrayProduct(int[] arr){
+    int pro=1;
+    for (int i = 0; i < arr.length; i++) {
+      pro *= arr[i];
+    }
+    return pro;
+  }
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+  
+  public void euler125(long max){
+    TreeSet set = new TreeSet();
+    long palsum = 0;
+    for (long i=1; i <= (long)Math.sqrt(max) ; i++){
+      for (long j=i-1; j>0 ; j--){
+        long squareSum=0;
+        for (long k=j; k<=i; k++){
+          squareSum += k*k;
+        }
+        if (squareSum>max){
+          break;
+        }
+        if ( isPal(""+squareSum)){
+          set.add(squareSum);
+        }
+      }
+//      println(""+i);
+    }
+    while(set.size()>0) {
+      palsum+= (long) set.pollFirst();
+    }
+    println(""+palsum);
+  }
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+  
+  public void euler150(int height){
+    int[][] arr = getRandomTable150(height);
+    for (int i = 0; i < arr.length; i++) {
+      for (int j = 0; j <= i; j++) {
+        System.out.printf("%8d",arr[i][j]);
+      }
+      println("");
+    }
+  }
+  
+  private int[][] getRandomTable150(int height){
+    int[][] arr = new int[height][height];
+    long t = 0;
+    for (int i=0; i<height ; i++){
+      for (int j=0; j<=i ; j++){
+        t = (615949*t + 797807) % ((long)Math.pow(2, 20));
+        arr[i][j] = (int)(t - ((long) Math.pow(2, 19)));
+      }
+    }
+    
+    return arr;
+  }
+  
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+  
+  public void euler165(){
+    int[][] lines = getRandomTable165(5000);
+    for (int i = 0; i < lines.length; i++) {
+      println(lines[i][0]+"  "+lines[i][1]+"  "+lines[i][2]+"  "+lines[i][3]);
+    }
+  }
+  
+  private int[][] getRandomTable165(int numOfLines){
+    int[][] arr = new int[numOfLines][4];
+    long t = 290797L;
+    for (int i=0; i<numOfLines ; i++){
+      for (int j=0; j<4 ; j++){
+        t = (t*t) % 50515093; 
+        arr[i][j] = (int) (t % 500);
+      }
+    }
+    return arr;
+  }
+  
+/******************************************************************************/  
+/******************************************************************************/  
+/******************************************************************************/  
+  private int[] primeArray;
+
+      //s.euler179(3100000); // 8 sek
+      //s.euler179(4100000); // ne konca !!!!!
+  public void euler179(int limit){
+    primeArray = getPrimesTo(limit/10);
+    println("primes  "+primeArray.length);
+    
+    TreeMap[] arr = new TreeMap[limit];
+    
+    int sum = 0;
+    
+    for (int i=2; i<limit-1; i++){
+      if (i%100000==0){
+        println(""+i);
+      }
+      int curPrime = 0;
+      int sqrt = (int)Math.sqrt(i);
+      while (i%primeArray[curPrime]!=0 && primeArray[curPrime]<= sqrt){
+        curPrime++;
+      }
+      int primeLookup = primeArray[curPrime];
+      if (primeLookup > sqrt){
+        arr[i] = new TreeMap();
+        arr[i].put(i, 1);
+      }else{
+        arr[i] = (TreeMap) arr[i/primeLookup].clone();
+        if (arr[i].containsKey(primeLookup)){
+          arr[i].put(primeLookup, (int) (arr[i].get(primeLookup))+1);
+        }else{
+          arr[i].put(primeLookup, 1);
+        }
+      }
+    }
+//    for (int i = 2; i < arr.length; i++) {
+//      print(""+i+"   : ");
+//      while(arr[i]!= null && !arr[i].isEmpty()){
+//        Entry e = arr[i].pollFirstEntry();
+//        print("  "+e.getKey()+"^"+e.getValue());
+//      }
+//      println("");
+//    }
+    println(""+sum);
+  }
+    
+  public void euler179v2(int limit){
+    primeArray = getPrimesTo(2 * (int) Math.sqrt(limit)); // 
+    println("primes  "+primeArray.length);
+    
+    int[] arr = new int[limit];
+    arr[0] = 4;
+    arr[1] = 4;
+    int sum = 0;
+    
+    for (int i=2; i<limit; i++){
+      int curPrime = 0;
+      int sqrt = (int)Math.sqrt(i);
+      while (i%primeArray[curPrime]!=0 && primeArray[curPrime]<= sqrt){
+        curPrime++;
+      }
+      if (primeArray[curPrime]<= sqrt){
+        arr[i] = primeArray[curPrime];
+      }else{
+        arr[i] = i;
+      }
+    }
+    int prevDivisors = 0;
+    for (int i = 2; i < arr.length; i++) {
+      int curi = i ;
+      int power = 1;
+      int curPrime = arr[i];
+      int divisors = 1;
+      while(curi>1){
+        curi /= arr[curi];
+        if(curPrime== arr[curi]){
+          power++;
+        }else{
+          curPrime = arr[curi];
+          divisors *= (power+1);
+          power = 1;
+        }
+      }
+      if (power>1){
+        divisors *= (power+1);
+      }
+      if (prevDivisors == divisors){
+        sum++;
+      }
+      prevDivisors = divisors;
+    }   
+    println(""+sum);
+  }
+  
+  private int[] getPrimesTo(int to){
+    int[] primes = new int[to];
+    int primecount=1;
+    int prime = 3;
+    boolean isPrime= false;
+    primes[0] = 2;
+    while (prime<=to){
+      primes[primecount++] = prime;
+      prime+=2;
+      isPrime=false;
+      while(!isPrime){
+        isPrime = true;
+        for(int primeDevisor=0; primes[primeDevisor]<= (int)(Math.sqrt(prime)) && prime<=to; primeDevisor++){
+          if (prime%primes[primeDevisor]==0){
+            isPrime=false;
+            prime+=2;
+            break;
+          }
+        }
+      }
+    }
+    int[] pr = new int[primecount];
+    System.arraycopy(primes, 0, pr, 0, primecount);
+    return pr;
+  }
+  
 /******************************************************************************/  
 /******************************************************************************/  
 /******************************************************************************/  
@@ -1450,7 +1882,6 @@ public class Solutions {
     }
   }
   
-  
   private int search2(int from, int to, int add){
     if (to <4) {
       return add+to-1;
@@ -1472,35 +1903,24 @@ public class Solutions {
     }
     return sum;
   }
+
   
-//  int[][] arrFromTo; 
-  HashMap<Object, Object> arrFromTo; 
-  int lenght328;
+  int[][] arrFromTo; 
+  int[] deviders;
   public void euler328v2(int len){
-    arrFromTo = new HashMap<Object, Object>();
-    lenght328 = len;
-//    arrFromTo = new int[len+1][len+1];
-//    for (int i = 0; i < arrFromTo.length; i++) {
-//      for (int j = 0; j < arrFromTo[i].length; j++) {
-//        arrFromTo[i][j] = -1;
-//      }
-//    }
+    deviders = new int[len+1];
+    arrFromTo = new int[len+1][len+1];
+    for (int i = 0; i < arrFromTo.length; i++) {
+      for (int j = 0; j < arrFromTo[i].length; j++) {
+        arrFromTo[i][j] = -1;
+      }
+    }
     int sum = 0;
     for (int i=1; i<= len ; i++){
       int costt = cost(1, i);
       sum += costt;
-      //System.out.println(i+"  "+costt);
     }
     System.out.println(sum);
-//    sum = 0;
-//    for (int i = 0; i < arrFromTo.length; i++) {
-//      for (int j = 0; j < arrFromTo[i].length; j++) {
-//        if (arrFromTo[i][j] == -1){
-//          sum++;
-//        }
-//      }
-//    }
-//    System.out.println(sum);
   }
   
   private int cost(int from, int to){
@@ -1510,27 +1930,20 @@ public class Solutions {
       return from;
     }else if(from == to-2){
       return from+1;
-    }else if(arrFromTo.containsKey(from*lenght328+to)){
-      return (int)arrFromTo.get(from*lenght328+to);
+    }else if(arrFromTo[from][to] != -1){
+      return arrFromTo[from][to];
     }else{
-//    }else if(arrFromTo[from][to] != -1){
-//      return arrFromTo[from][to];
-//    }else{
       int bestCost = Integer.MAX_VALUE;
-      int devider = 0;
+      
       for (int i = (from+to)/2; i<=to; i++){
         int curCost = Math.max(cost(from, i-1), cost(i+1, to)) +i ;
         if (curCost < bestCost){
           bestCost = curCost;
-          devider = i;
+          deviders[to-from] = i;
         }
       }
-      if (from == 1){
-////        System.out.println("to: "+to+"    dev: "+devider);
-        System.out.println(to+" "+devider);
-      }
-      arrFromTo.put(from*lenght328+to, bestCost);
-//      arrFromTo[from][to]=bestCost;
+      
+      arrFromTo[from][to]=bestCost;
       return bestCost;
     }
   }
@@ -1832,6 +2245,14 @@ public class Solutions {
     }
     return n;
   }
+  /**
+   * 
+   * @param n
+   * @return n-th pentagonal number
+   */
+  private long getPentagonaln(int n){
+      return (n*(3*n-1)) / 2;
+  }
   private long getHexagonal(long min){
     long n = 0;
     hexagonali--;
@@ -1848,7 +2269,7 @@ public class Solutions {
    * @param number
    * @return number of divisors
    */
-  private int numOfDevisorsBrute(int num){
+  private int numOfDivisorsBrute(int num){
     int sum = 0;
     for (int i=1; i<=num; i++){
       if (num%i==0){
@@ -1864,13 +2285,14 @@ public class Solutions {
    * @param number
    * @return number of divisors
    */
-  private int numOfDevisors(int number){
+  private int numOfDivisors(int number){
     int sum = 1;
-    int factor = 2;
+    int factor = 0;
     int power = 1;
-    while (factor<=number || number != 1){
-      if (number%factor == 0){
-        number = number/factor;
+
+    while (number>1){
+      if (number%primeArray[factor] == 0){
+        number = number/primeArray[factor];
         power++;
       }else{
         factor++;
@@ -1909,6 +2331,32 @@ public class Solutions {
     }
     return factorArray;
   }
+  /**
+   * Function returns an array of all prime divisors of the given number.
+   * 
+   * @param number 
+   * @return integer array
+   */
+  private int[] factors(int number){
+    TreeSet map = new TreeSet();
+    map.add(1);
+    if (number>1){
+      int factor = 2;
+      while (factor<=number || number != 1){
+        if (number%factor == 0){
+          number = number/factor;
+          map.add(factor);
+        }else{
+          factor++;
+        }
+      }
+    }
+    int[] factorArray = new int[map.size()];
+    for (int i = 0; i<factorArray.length; i++){
+      factorArray[i] = (int) map.pollFirst();
+    }
+    return factorArray;
+  }
   
   private int pow(int a,int b){
     return (int)(Math.pow(a, b));
@@ -1931,6 +2379,14 @@ public class Solutions {
       numval += s.charAt(j)-64;
     }
     return numval;
+  }
+  
+  private void println(String s){
+    System.out.println(s);
+  }
+
+  private void print(String s){
+    System.out.print(s);
   }
   
 }
