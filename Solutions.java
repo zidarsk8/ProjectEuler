@@ -1510,10 +1510,41 @@ public class Solutions {
 /******************************************************************************/  
   
   public void euler165(){
-    int[][] lines = getRandomTable165(5000);
-    for (int i = 0; i < lines.length; i++) {
-      println(lines[i][0]+"  "+lines[i][1]+"  "+lines[i][2]+"  "+lines[i][3]);
+    int sum = 0;
+    int power = 10;
+    for (int i=10; i<1000000000 ; i++){
+      if (i>power*10){
+        power*=10;
+      }
+      if (i%10 > 0  && (i%10 +i/power)%2 ==1){
+        int sumI = i+reverseInt(i);
+        if (!containsEven(""+sumI)){
+          sum++;
+        }
+      }
     }
+    println(""+sum);
+    
+//    int[][] lines = getRandomTable165(5000);
+//    for (int i = 0; i < lines.length; i++) {
+//      println(lines[i][0]+"  "+lines[i][1]+"  "+lines[i][2]+"  "+lines[i][3]);
+//    }
+  }
+  
+  private int reverseInt(int i){
+    int rev = 0;
+    while (i>0){
+      rev = rev*10 + i%10;
+      i/=10;
+    }
+    return rev;
+  }
+  
+  private boolean containsEven(String s){
+    if (s.indexOf("0")!=-1 || s.indexOf("2")!=-1  || s.indexOf("4")!=-1  || s.indexOf("6")!=-1  || s.indexOf("8")!=-1 ){
+      return true;
+    }
+    return false;
   }
   
   private int[][] getRandomTable165(int numOfLines){
