@@ -66,11 +66,11 @@ public class ProjectEuler {
 //      s.euler48(1000);
 //      s.euler49();
 //      s.euler50(1000000);
-      //s.euler52(2);
+//      s.euler52();
       //s.euler53(100);
 //      s.euler67(arr);
 //      s.euler69(1000000);
-  
+//      s.euler76(100);
 //      s.euler81(var.getEuler81and82());
 //      s.euler92(10000000); 
 //      s.euler97();
@@ -79,16 +79,18 @@ public class ProjectEuler {
 
 //      s.euler124(100000,10000);
 //      s.euler125(100000000);
-      //s.euler150(5);
-      s.euler165();
+      //s.euler131(100);
+      s.euler152(2,46);
+      //s.euler165()
 //      s.euler179v2(10000000);  
 //      s.euler303v3(10000);
-      //todo: s.euler327(4, 6);
+      //s.euler327(4, 6);
       
-      //s.euler328v2(100);
+      //s.euler328v3(100);
       
       //s.primetest(10000000000L);
     }
+    
 }
 
 
