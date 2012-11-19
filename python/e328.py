@@ -44,3 +44,6 @@ for x in range(1,1000):
     print "%4d   %4d   %3d" % (x, lastInd+1, 100*(lastInd+1)/x)
         #break
 
+
+
+
