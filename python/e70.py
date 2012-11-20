@@ -1,46 +1,17 @@
 import math
 
-def prime():
-    p,i = [2,3],3
-    yield 2
-    while 1:
-        yield i
-        while 1:
-            c,i,s= 0, i+2, math.sqrt(i+2)
-            while i % p[c] != 0 and p[c] <= s:
-                c += 1
-            if i % p[c] != 0:
-                p.append(i)
-                break
 
+n = 10000000
+devs = range(n+1)
 
-n = 10**4+1
-nrt = math.sqrt(n)
-primes = []
-for p in prime():
-    primes.append(p)
-    if p > nrt:
-        break
+#for i in range(2,int(math.sqrt(n))+1):
+#    if devs[i] == i:
+#        for j in range(i,n+1,i):
+#            devs[j] = i if devs[j] == j else devs[j]
 
-count = 0
-a = [0,1]
-for i in range(2,n):
-    for p in primes:
-        if i%p == 0:
-            a.append(p)
-            break
-        if p > math.sqrt(i):
-            a.append(i)
-            break
+for i,j in  [(i,j) for i in range(2,int(math.sqrt(n))+1) if devs[i] == i for j in range(i,n+1,i)]:
+    devs[j] = i if devs[j] == j else devs[j]
 
-b = range(n)
-
-for i in range(2,int(nrt)+1):
-    for 
-
-print sum(a)
-
-#for i in range(len(a)):
-#    print i, a[i]
-
-
+print sum(devs)
+#for i in range(len(devs)):
+#    print "%4d  %3d" % (i, devs[i])
