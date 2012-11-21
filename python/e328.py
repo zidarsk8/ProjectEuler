@@ -32,7 +32,7 @@ def bfg(f,t,depth=0):
 
 #print bfg(1,200)
 
-for x in range(1,1000):
+for x in range(1,2000):
     m = [(i,i+max(bf(1,i-1),bf(i+1,x))) for i in range(1,x+2)]
     mm = [i[1] for i in m]
     mmm = [mm[i]<=mm[i+1] for i in range(len(mm)-1)]
@@ -41,6 +41,6 @@ for x in range(1,1000):
 
     #print x, min(mm)
     #if False in mmm[lastInd:]:
-    print "%4d   %4d   %3d" % (x, lastInd+1, 100*(lastInd+1)/x)
+    print "%d,%d,%d,%d" % (x, lastInd+1, x-lastInd-1, 100*(lastInd+1)/x)
         #break
 
